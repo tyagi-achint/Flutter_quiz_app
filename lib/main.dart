@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'questionBank.dart';
 
-void main() => runApp(QuizzApp());
+import 'QuizBrain .dart';
 
-class QuizzApp extends StatelessWidget {
+QuizBrain quizBrain = QuizBrain();
+
+void main() => runApp(
+      QuizApp(),
+    );
+
+class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,28 +31,6 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scorecard = [];
-
-  int questionNumber = 0;
-
-  void checkAnswer(bool answer) {
-    if (questionBank[questionNumber].questionAnswer == answer) {
-      scorecard.add(
-        Icon(
-          Icons.check,
-          color: Colors.green,
-        ),
-      );
-    } else {
-      scorecard.add(
-        Icon(
-          Icons.close,
-          color: Colors.red,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,7 +43,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -86,14 +69,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  if (scorecard.length < questionBank.length) {
-                    checkAnswer(true);
-                  }
-                  if (questionNumber < questionBank.length - 1) {
-                    questionNumber++;
-                  } else {
-                    print(scorecard);
-                  }
+                  quizBrain.nextQuestion(true, context);
                 });
               },
             ),
@@ -115,14 +91,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  if (scorecard.length < questionBank.length) {
-                    checkAnswer(false);
-                  }
-                  if (questionNumber < questionBank.length - 1) {
-                    questionNumber++;
-                  } else {
-                    print(scorecard);
-                  }
+                  quizBrain.nextQuestion(false, context);
                 });
               },
             ),
@@ -132,7 +101,7 @@ class _QuizPageState extends State<QuizPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: scorecard,
+            children: quizBrain.scorecard,
           ),
         ),
       ],
