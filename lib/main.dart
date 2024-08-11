@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'questionBank.dart';
 
 void main() => runApp(QuizzApp());
 
@@ -26,20 +27,27 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scorecard = [];
-  List<String> questions = [
-    'Flutter is a UI toolkit developed by Apple.',
-    'Flutter uses the Dart programming language.',
-    'In Flutter, widgets are immutable.',
-    'StatefulWidget is used when the UI changes dynamically.',
-    'Flutter can only be used to develop Android apps.',
-    'The main function is the entry point of a Flutter application.',
-    'Hot Reload in Flutter allows you to apply changes without losing the application state.',
-    'In Flutter, `setState` is used to update the UI by rebuilding the widget.',
-    'Flutter applications cannot run on web browsers.',
-    'Flutter provides a rich set of Material Design and Cupertino widgets.',
-  ];
 
   int questionNumber = 0;
+
+  void checkAnswer(bool answer) {
+    if (questionBank[questionNumber].questionAnswer == answer) {
+      scorecard.add(
+        Icon(
+          Icons.check,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      scorecard.add(
+        Icon(
+          Icons.close,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -52,7 +60,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNumber],
+                questionBank[questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -78,13 +86,14 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  questionNumber++;
-                  scorecard.add(
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                  );
+                  if (scorecard.length < questionBank.length) {
+                    checkAnswer(true);
+                  }
+                  if (questionNumber < questionBank.length - 1) {
+                    questionNumber++;
+                  } else {
+                    print(scorecard);
+                  }
                 });
               },
             ),
@@ -106,14 +115,14 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  questionNumber++;
-
-                  scorecard.add(
-                    Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ),
-                  );
+                  if (scorecard.length < questionBank.length) {
+                    checkAnswer(false);
+                  }
+                  if (questionNumber < questionBank.length - 1) {
+                    questionNumber++;
+                  } else {
+                    print(scorecard);
+                  }
                 });
               },
             ),
